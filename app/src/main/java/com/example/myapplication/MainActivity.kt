@@ -1,6 +1,7 @@
 package com.example.myapplication
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,8 @@ import com.example.myapplication.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
+
+    private val sharedPreferences by lazy { getSharedPreferences("QuizApp", Context.MODE_PRIVATE) }
     override fun onCreate(savedInstanceState: Bundle?) {
 
 
@@ -16,15 +19,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        savedInstanceState?.let {
-            currentquestionindex = it.getInt("currentQuestionIndex", 0)
-            score = it.getInt("score", 0)
-            dispalyquestion()
-        } ?: run {
 
-            dispalyquestion()
+        currentquestionindex = sharedPreferences.getInt("currentQuestionIndex", 0)
+        score = sharedPreferences.getInt("score", 0)
 
-        }
+
+        dispalyquestion()
+
+
+
+
         binding.button.setOnClickListener {
             checkanswer(selectAnswerIndex = 0)
         }
@@ -37,29 +41,11 @@ class MainActivity : AppCompatActivity() {
         binding.button3.setOnClickListener {
             checkanswer(selectAnswerIndex = 2)
 
-
+            checkanswer(selectAnswerIndex = 2)
         }
 
 
     }
-
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        // Save the current state of the quiz
-        outState.putInt("currentQuestionIndex", currentquestionindex)
-        outState.putInt("score", score)
-    }
-
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        // Restore the saved state of the quiz
-        currentquestionindex = savedInstanceState.getInt("currentQuestionIndex", 0)
-        score = savedInstanceState.getInt("score", 0)
-        dispalyquestion()
-    }
-
 
 
     val questions = arrayOf(
@@ -147,11 +133,11 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
     }
 
+
 }
+
 
 
 
